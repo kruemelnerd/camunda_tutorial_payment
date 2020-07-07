@@ -32,11 +32,11 @@ public class CheckCreditHandler implements ExternalTaskHandler {
 
         Double amountToPay = getDoubleValue(externalTask.getVariable("amountToPay"));
         String userId = externalTask.getVariable("userId");
-        if (StringUtils.isEmpty(userId)){
+        if (StringUtils.isEmpty(userId)) {
             throw new IllegalArgumentException("userId or amountToPay can't be empty");
         }
         double amountFromCredit = checkCreditService.getAmountFromCredit(userId);
-        LOGGER.info("amountToPay: " + amountFromCredit + " amountFromCredit: " + amountFromCredit);
+        LOGGER.info("amountToPay: " + amountToPay + " amountFromCredit: " + amountFromCredit);
 
         Boolean creditSufficient = true;
         if (amountToPay > amountFromCredit) {
