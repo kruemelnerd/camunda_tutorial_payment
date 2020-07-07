@@ -36,6 +36,7 @@ public class CheckCreditHandler implements ExternalTaskHandler {
             throw new IllegalArgumentException("userId or amountToPay can't be empty");
         }
         double amountFromCredit = checkCreditService.getAmountFromCredit(userId);
+        LOGGER.info("amountToPay: " + amountFromCredit + " amountFromCredit: " + amountFromCredit);
 
         Boolean creditSufficient = true;
         if (amountToPay > amountFromCredit) {

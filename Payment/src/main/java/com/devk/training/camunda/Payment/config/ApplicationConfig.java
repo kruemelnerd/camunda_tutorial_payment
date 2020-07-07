@@ -43,13 +43,6 @@ public class ApplicationConfig {
         startSingleSubscriber(client, "payCreditCard");
         startSingleSubscriber(client, "payCredit");
 
-        ExternalTaskHandler test = new ExternalTaskHandler() {
-            @Override
-            public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
-
-            }
-        }
-
     }
 
     void startSingleSubscriber(ExternalTaskClient client, String subscriberName) {
@@ -60,7 +53,7 @@ public class ApplicationConfig {
                     String amount = externalTask.getVariable("amountToPay");
                     String userId = externalTask.getVariable("userId");
                     Boolean creditSufficient = externalTask.getVariable("creditSufficient");
-                    LOGGER.info(subscriberName + ": " + "userId: " + userId + "creditSufficient: " + creditSufficient + " amount: " + amount);
+                    LOGGER.info(subscriberName + ": " + "userId: " + userId + "creditSufficient: " + creditSufficient + " amountToPay: " + amount);
                     // Complete the task
                     externalTaskService.complete(externalTask);
                 })
