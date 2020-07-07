@@ -1,166 +1,175 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_15s1gc9" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.0.0">
-  <bpmn:process id="Process_11qnhuc" isExecutable="true">
-    <bpmn:startEvent id="StartEvent_1" name="Bezahlung angefordert">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_15s1gc9" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.0.0">
+  <bpmn:process id="PaymentProcess" name="Payment" isExecutable="true">
+    <bpmn:startEvent id="BezahlungAngefordertStartEvent" name="Bezahlung angefordert">
       <bpmn:outgoing>Flow_02acaps</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:endEvent id="Event_13kuw3w" name="Bezahlung abgeschlossen">
+    <bpmn:endEvent id="BezahlungAbgeschlossenEndEvent" name="Bezahlung abgeschlossen">
       <bpmn:incoming>Flow_1juazg4</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:task id="Activity_07fsxbc" name="Prüfe Guthaben">
-      <bpmn:incoming>Flow_02acaps</bpmn:incoming>
-      <bpmn:outgoing>Flow_0cpi3f1</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:sequenceFlow id="Flow_02acaps" sourceRef="StartEvent_1" targetRef="Activity_07fsxbc" />
-    <bpmn:exclusiveGateway id="Gateway_1w5qnmk" name="Ausreichendes Guthaben?">
-      <bpmn:incoming>Flow_0cpi3f1</bpmn:incoming>
-      <bpmn:outgoing>Flow_0q93vwu</bpmn:outgoing>
-      <bpmn:outgoing>Flow_1af034d</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_0cpi3f1" sourceRef="Activity_07fsxbc" targetRef="Gateway_1w5qnmk" />
-    <bpmn:task id="Activity_0dlvdar" name="Zahle mit teilen von Guthaben">
-      <bpmn:incoming>Flow_0q93vwu</bpmn:incoming>
-      <bpmn:outgoing>Flow_1f5tvua</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:sequenceFlow id="Flow_0q93vwu" name="Ja" sourceRef="Gateway_1w5qnmk" targetRef="Activity_0dlvdar" />
-    <bpmn:task id="Activity_1a5m1cy" name="Berechne die Anteile">
-      <bpmn:incoming>Flow_1af034d</bpmn:incoming>
-      <bpmn:outgoing>Flow_00rjc5o</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:sequenceFlow id="Flow_1af034d" name="Nein" sourceRef="Gateway_1w5qnmk" targetRef="Activity_1a5m1cy" />
-    <bpmn:sequenceFlow id="Flow_1f5tvua" sourceRef="Activity_0dlvdar" targetRef="Gateway_0hehs8y" />
-    <bpmn:sequenceFlow id="Flow_00rjc5o" sourceRef="Activity_1a5m1cy" targetRef="Gateway_15gxu2y" />
-    <bpmn:task id="Activity_09agum0" name="Zahle Differenz von KK">
-      <bpmn:incoming>Flow_09r0t34</bpmn:incoming>
-      <bpmn:outgoing>Flow_0cxb23l</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:sequenceFlow id="Flow_0cxb23l" sourceRef="Activity_09agum0" targetRef="Gateway_02dt04h" />
-    <bpmn:sequenceFlow id="Flow_09r0t34" sourceRef="Gateway_15gxu2y" targetRef="Activity_09agum0" />
+    <bpmn:sequenceFlow id="Flow_00rjc5o" sourceRef="BerechneDieAnteileTask" targetRef="Gateway_15gxu2y" />
+    <bpmn:sequenceFlow id="Flow_0cxb23l" sourceRef="ZahleDifferenzVonCCTask" targetRef="Gateway_02dt04h" />
+    <bpmn:sequenceFlow id="Flow_09r0t34" sourceRef="Gateway_15gxu2y" targetRef="ZahleDifferenzVonCCTask" />
     <bpmn:parallelGateway id="Gateway_15gxu2y">
       <bpmn:incoming>Flow_00rjc5o</bpmn:incoming>
       <bpmn:outgoing>Flow_09r0t34</bpmn:outgoing>
       <bpmn:outgoing>Flow_0ojjjfg</bpmn:outgoing>
     </bpmn:parallelGateway>
-    <bpmn:task id="Activity_0reyele" name="Zahle komplettes Guthaben">
-      <bpmn:incoming>Flow_0ojjjfg</bpmn:incoming>
-      <bpmn:outgoing>Flow_154vbsd</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:sequenceFlow id="Flow_0ojjjfg" sourceRef="Gateway_15gxu2y" targetRef="Activity_0reyele" />
+    <bpmn:sequenceFlow id="Flow_0ojjjfg" sourceRef="Gateway_15gxu2y" targetRef="ZahleKomplettesGuthabenTask" />
     <bpmn:sequenceFlow id="Flow_0j7pdic" sourceRef="Gateway_02dt04h" targetRef="Gateway_0hehs8y" />
     <bpmn:parallelGateway id="Gateway_02dt04h">
       <bpmn:incoming>Flow_0cxb23l</bpmn:incoming>
       <bpmn:incoming>Flow_154vbsd</bpmn:incoming>
       <bpmn:outgoing>Flow_0j7pdic</bpmn:outgoing>
     </bpmn:parallelGateway>
-    <bpmn:sequenceFlow id="Flow_154vbsd" sourceRef="Activity_0reyele" targetRef="Gateway_02dt04h" />
+    <bpmn:sequenceFlow id="Flow_154vbsd" sourceRef="ZahleKomplettesGuthabenTask" targetRef="Gateway_02dt04h" />
     <bpmn:exclusiveGateway id="Gateway_0hehs8y">
-      <bpmn:incoming>Flow_1f5tvua</bpmn:incoming>
       <bpmn:incoming>Flow_0j7pdic</bpmn:incoming>
+      <bpmn:incoming>Flow_1f5tvua</bpmn:incoming>
       <bpmn:outgoing>Flow_1juazg4</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_1juazg4" sourceRef="Gateway_0hehs8y" targetRef="Event_13kuw3w" />
+    <bpmn:sequenceFlow id="Flow_1juazg4" sourceRef="Gateway_0hehs8y" targetRef="BezahlungAbgeschlossenEndEvent" />
+    <bpmn:exclusiveGateway id="AusreichendesGuthabenGateway" name="Ausreichendes Guthaben?">
+      <bpmn:incoming>Flow_0cpi3f1</bpmn:incoming>
+      <bpmn:outgoing>NeinSequenceFlow</bpmn:outgoing>
+      <bpmn:outgoing>JaSequenceFlow</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="NeinSequenceFlow" name="Nein" sourceRef="AusreichendesGuthabenGateway" targetRef="BerechneDieAnteileTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{not creditSufficient}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="JaSequenceFlow" name="Ja" sourceRef="AusreichendesGuthabenGateway" targetRef="ZahleMitTeilenVonGuthabenTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{creditSufficient}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_02acaps" sourceRef="BezahlungAngefordertStartEvent" targetRef="PrufeGuthabenTask" />
+    <bpmn:sequenceFlow id="Flow_0cpi3f1" sourceRef="PrufeGuthabenTask" targetRef="AusreichendesGuthabenGateway" />
+    <bpmn:sequenceFlow id="Flow_1f5tvua" sourceRef="ZahleMitTeilenVonGuthabenTask" targetRef="Gateway_0hehs8y" />
+    <bpmn:scriptTask id="BerechneDieAnteileTask" name="Berechne die Anteile" scriptFormat="JavaScript">
+      <bpmn:incoming>NeinSequenceFlow</bpmn:incoming>
+      <bpmn:outgoing>Flow_00rjc5o</bpmn:outgoing>
+      <bpmn:script>print('Berechne Anteile\n');</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="PrufeGuthabenTask" name="Prüfe Guthaben" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_02acaps</bpmn:incoming>
+      <bpmn:outgoing>Flow_0cpi3f1</bpmn:outgoing>
+      <bpmn:script>print('Prüfe Guthaben\n');</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="ZahleDifferenzVonCCTask" name="Zahle Differenz von CC" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_09r0t34</bpmn:incoming>
+      <bpmn:outgoing>Flow_0cxb23l</bpmn:outgoing>
+      <bpmn:script>print('Zahle Differenz von CC\n');</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="ZahleKomplettesGuthabenTask" name="Zahle komplettes Guthaben" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_0ojjjfg</bpmn:incoming>
+      <bpmn:outgoing>Flow_154vbsd</bpmn:outgoing>
+      <bpmn:script>print('Zahle komplettes Guthaben\n');</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="ZahleMitTeilenVonGuthabenTask" name="Zahle mit teilen von Guthaben" scriptFormat="JavaScript">
+      <bpmn:incoming>JaSequenceFlow</bpmn:incoming>
+      <bpmn:outgoing>Flow_1f5tvua</bpmn:outgoing>
+      <bpmn:script>print('Zahle mit teilen von Guthaben\n');</bpmn:script>
+    </bpmn:scriptTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_11qnhuc">
-      <bpmndi:BPMNEdge id="Flow_02acaps_di" bpmnElement="Flow_02acaps">
-        <di:waypoint x="215" y="177" />
-        <di:waypoint x="270" y="177" />
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PaymentProcess">
+      <bpmndi:BPMNEdge id="Flow_1f5tvua_di" bpmnElement="Flow_1f5tvua">
+        <di:waypoint x="630" y="90" />
+        <di:waypoint x="845" y="90" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0cpi3f1_di" bpmnElement="Flow_0cpi3f1">
         <di:waypoint x="370" y="177" />
         <di:waypoint x="425" y="177" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0q93vwu_di" bpmnElement="Flow_0q93vwu">
+      <bpmndi:BPMNEdge id="Flow_02acaps_di" bpmnElement="Flow_02acaps">
+        <di:waypoint x="215" y="177" />
+        <di:waypoint x="270" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0q93vwu_di" bpmnElement="JaSequenceFlow">
         <di:waypoint x="450" y="152" />
         <di:waypoint x="450" y="90" />
         <di:waypoint x="530" y="90" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="459" y="118" width="12" height="14" />
+          <dc:Bounds x="459" y="118" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1af034d_di" bpmnElement="Flow_1af034d">
+      <bpmndi:BPMNEdge id="Flow_1af034d_di" bpmnElement="NeinSequenceFlow">
         <di:waypoint x="450" y="202" />
         <di:waypoint x="450" y="280" />
-        <di:waypoint x="530" y="280" />
+        <di:waypoint x="490" y="280" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="454" y="238" width="23" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1f5tvua_di" bpmnElement="Flow_1f5tvua">
-        <di:waypoint x="630" y="90" />
-        <di:waypoint x="845" y="90" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_00rjc5o_di" bpmnElement="Flow_00rjc5o">
-        <di:waypoint x="630" y="280" />
-        <di:waypoint x="635" y="280" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0cxb23l_di" bpmnElement="Flow_0cxb23l">
-        <di:waypoint x="820" y="280" />
-        <di:waypoint x="845" y="280" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_09r0t34_di" bpmnElement="Flow_09r0t34">
-        <di:waypoint x="685" y="280" />
-        <di:waypoint x="720" y="280" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0ojjjfg_di" bpmnElement="Flow_0ojjjfg">
-        <di:waypoint x="660" y="305" />
-        <di:waypoint x="660" y="380" />
-        <di:waypoint x="720" y="380" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0j7pdic_di" bpmnElement="Flow_0j7pdic">
-        <di:waypoint x="870" y="255" />
-        <di:waypoint x="870" y="115" />
+      <bpmndi:BPMNEdge id="Flow_1juazg4_di" bpmnElement="Flow_1juazg4">
+        <di:waypoint x="895" y="90" />
+        <di:waypoint x="942" y="90" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_154vbsd_di" bpmnElement="Flow_154vbsd">
         <di:waypoint x="820" y="380" />
         <di:waypoint x="870" y="380" />
         <di:waypoint x="870" y="305" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1juazg4_di" bpmnElement="Flow_1juazg4">
-        <di:waypoint x="895" y="90" />
-        <di:waypoint x="942" y="90" />
+      <bpmndi:BPMNEdge id="Flow_0j7pdic_di" bpmnElement="Flow_0j7pdic">
+        <di:waypoint x="870" y="255" />
+        <di:waypoint x="870" y="115" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+      <bpmndi:BPMNEdge id="Flow_0ojjjfg_di" bpmnElement="Flow_0ojjjfg">
+        <di:waypoint x="660" y="305" />
+        <di:waypoint x="660" y="380" />
+        <di:waypoint x="720" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09r0t34_di" bpmnElement="Flow_09r0t34">
+        <di:waypoint x="685" y="280" />
+        <di:waypoint x="720" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cxb23l_di" bpmnElement="Flow_0cxb23l">
+        <di:waypoint x="820" y="280" />
+        <di:waypoint x="845" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00rjc5o_di" bpmnElement="Flow_00rjc5o">
+        <di:waypoint x="590" y="280" />
+        <di:waypoint x="635" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="BezahlungAngefordertStartEvent">
         <dc:Bounds x="179" y="159" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="169" y="202" width="58" height="27" />
+          <dc:Bounds x="170" y="202" width="57" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_07fsxbc_di" bpmnElement="Activity_07fsxbc">
-        <dc:Bounds x="270" y="137" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1w5qnmk_di" bpmnElement="Gateway_1w5qnmk" isMarkerVisible="true">
-        <dc:Bounds x="425" y="152" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="494" y="167" width="73" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0dlvdar_di" bpmnElement="Activity_0dlvdar" bioc:stroke="rgb(67, 160, 71)" bioc:fill="rgb(200, 230, 201)">
-        <dc:Bounds x="530" y="50" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1a5m1cy_di" bpmnElement="Activity_1a5m1cy">
-        <dc:Bounds x="530" y="240" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1h56u9q_di" bpmnElement="Gateway_15gxu2y">
-        <dc:Bounds x="635" y="255" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_09agum0_di" bpmnElement="Activity_09agum0">
-        <dc:Bounds x="720" y="240" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0reyele_di" bpmnElement="Activity_0reyele" bioc:stroke="rgb(67, 160, 71)" bioc:fill="rgb(200, 230, 201)">
-        <dc:Bounds x="720" y="340" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0vaesl7_di" bpmnElement="Gateway_02dt04h">
-        <dc:Bounds x="845" y="255" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_13kuw3w_di" bpmnElement="Event_13kuw3w">
+      <bpmndi:BPMNShape id="Event_13kuw3w_di" bpmnElement="BezahlungAbgeschlossenEndEvent">
         <dc:Bounds x="942" y="72" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="923" y="115" width="74" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1h56u9q_di" bpmnElement="Gateway_15gxu2y">
+        <dc:Bounds x="635" y="255" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0vaesl7_di" bpmnElement="Gateway_02dt04h">
+        <dc:Bounds x="845" y="255" width="50" height="50" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0hehs8y_di" bpmnElement="Gateway_0hehs8y" isMarkerVisible="true">
         <dc:Bounds x="845" y="65" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1w5qnmk_di" bpmnElement="AusreichendesGuthabenGateway" isMarkerVisible="true">
+        <dc:Bounds x="425" y="152" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="494" y="167" width="74" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_04w5pn2_di" bpmnElement="BerechneDieAnteileTask">
+        <dc:Bounds x="490" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0qc5vtx_di" bpmnElement="PrufeGuthabenTask">
+        <dc:Bounds x="270" y="137" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1o0j48n_di" bpmnElement="ZahleDifferenzVonCCTask">
+        <dc:Bounds x="720" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0mrdhnf_di" bpmnElement="ZahleKomplettesGuthabenTask" bioc:stroke="rgb(67, 160, 71)" bioc:fill="rgb(200, 230, 201)">
+        <dc:Bounds x="720" y="340" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xsu8lb_di" bpmnElement="ZahleMitTeilenVonGuthabenTask" bioc:stroke="rgb(67, 160, 71)" bioc:fill="rgb(200, 230, 201)">
+        <dc:Bounds x="530" y="50" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
