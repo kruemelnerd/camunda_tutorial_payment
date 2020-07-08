@@ -11,7 +11,7 @@ public class CheckCreditService {
 
     public double getAmountFromCredit(String userid) {
         double leftLimit = 1D;
-        double rightLimit = 100000D;
+        double rightLimit = 100D;
         double generatedDouble = leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);
 
         BigDecimal bd = BigDecimal.valueOf(generatedDouble);

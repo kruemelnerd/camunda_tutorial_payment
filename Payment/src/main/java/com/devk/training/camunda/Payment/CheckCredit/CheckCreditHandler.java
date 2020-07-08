@@ -34,6 +34,7 @@ public class CheckCreditHandler implements ExternalTaskHandler {
             Integer retries = externalTask.getRetries();
             retries = (retries == null) ? 3 : retries - 1;
             LOGGER.warn("checkCredit is Failing with the remaining "+ retries + " retries. Check the Camunda Cockpit");
+            //externalTaskService.handleBpmnError(externalTask, "CreditError", "Some random message");
             externalTaskService.handleFailure(externalTask, "Task should fail.", "Because you wanted it.", retries, 1000);
             return;
         }

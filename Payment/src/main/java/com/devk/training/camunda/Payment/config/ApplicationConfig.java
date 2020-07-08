@@ -1,5 +1,6 @@
 package com.devk.training.camunda.Payment.config;
 
+import com.devk.training.camunda.Payment.ChargeCreditCard.ChargeCreditHandler;
 import com.devk.training.camunda.Payment.CheckCredit.CheckCreditHandler;
 import com.devk.training.camunda.Payment.CheckCredit.CheckCreditService;
 import org.camunda.bpm.client.ExternalTaskClient;
@@ -21,10 +22,12 @@ public class ApplicationConfig {
     Logger LOGGER = LoggerFactory.getLogger(ApplicationConfig.class);
 
     CheckCreditHandler checkCreditHandler;
+    ChargeCreditHandler chargeCreditHandler;
 
     @Autowired
-    public ApplicationConfig(CheckCreditHandler checkCreditHandler) {
+    public ApplicationConfig(CheckCreditHandler checkCreditHandler, ChargeCreditHandler chargeCreditHandler) {
         this.checkCreditHandler = checkCreditHandler;
+        this.chargeCreditHandler = chargeCreditHandler;
     }
 
     @Bean
@@ -32,6 +35,7 @@ public class ApplicationConfig {
         ExternalTaskClient client = ExternalTaskClient.create()
                 .baseUrl("http://localhost:8080/engine-rest")
                 .asyncResponseTimeout(5000)
+                .usePriority(true)
                 .build();
 
         client.subscribe("checkCredit")
@@ -39,9 +43,15 @@ public class ApplicationConfig {
                 .handler(checkCreditHandler)
                 .open();
 
+        client.subscribe("payCredit")
+                .lockDuration(1000) // the default lock duration is 20 seconds, but you can override this
+                .handler(chargeCreditHandler)
+                .open();
+
         startSingleSubscriber(client, "calculateRates");
         startSingleSubscriber(client, "payCreditCard");
-        startSingleSubscriber(client, "payCredit");
+        startSingleSubscriber(client, "rewindCC");
+        //startSingleSubscriber(client, "payCredit");
 
     }
 
@@ -49,6 +59,7 @@ public class ApplicationConfig {
         // subscribe to an external task topic as specified in the process
         client.subscribe(subscriberName)
                 .lockDuration(1000) // the default lock duration is 20 seconds, but you can override this
+
                 .handler((externalTask, externalTaskService) -> {
                     String amount = externalTask.getVariable("amountToPay");
                     String userId = externalTask.getVariable("userId");
