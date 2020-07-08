@@ -29,6 +29,13 @@ public class CheckCreditHandler implements ExternalTaskHandler {
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
         LOGGER.info("checkCredit" + " :)");
 
+        Boolean shouldFail = externalTask.getVariable("shouldFail");
+        if (shouldFail != null && shouldFail) {
+            LOGGER.error("checkCredit is Failing");
+            externalTaskService.handleFailure(externalTask, "Task should fail.", "Because you wanted it.", 0, 1000);
+            return;
+        }
+
 
         Double amountToPay = getDoubleValue(externalTask.getVariable("amountToPay"));
         String userId = externalTask.getVariable("userId");
