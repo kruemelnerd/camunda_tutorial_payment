@@ -31,8 +31,10 @@ public class CheckCreditHandler implements ExternalTaskHandler {
 
         Boolean shouldFail = externalTask.getVariable("shouldFail");
         if (shouldFail != null && shouldFail) {
-            LOGGER.error("checkCredit is Failing");
-            externalTaskService.handleFailure(externalTask, "Task should fail.", "Because you wanted it.", 0, 1000);
+            Integer retries = externalTask.getRetries();
+            retries = (retries == null) ? 3 : retries - 1;
+            LOGGER.warn("checkCredit is Failing with the remaining "+ retries + " retries. Check the Camunda Cockpit");
+            externalTaskService.handleFailure(externalTask, "Task should fail.", "Because you wanted it.", retries, 1000);
             return;
         }
 
