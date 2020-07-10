@@ -19,7 +19,7 @@ public class DistractDiscountConfig {
     }
 
     @Bean
-    void init(){
+    void initDistractDiscount(){
         LOGGER.info("DistractDiscountConfig started");
         ExternalTaskClient client = ExternalTaskClient.create()
                 .baseUrl("http://localhost:8080/engine-rest")

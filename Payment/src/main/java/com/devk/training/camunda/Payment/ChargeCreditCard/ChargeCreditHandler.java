@@ -30,6 +30,12 @@ public class ChargeCreditHandler implements ExternalTaskHandler {
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
         LOGGER.info("chargeCredit");
 
+        try {
+            Thread.sleep(50000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         Boolean shouldFailDuringPayment = externalTask.getVariable("shouldFailDuringPayment");
         if (shouldFailDuringPayment != null && shouldFailDuringPayment) {
             LOGGER.warn("Task ChargeCredit is failing on your own wish");
