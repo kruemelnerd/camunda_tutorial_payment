@@ -18,7 +18,8 @@
     <logger name="javax.activation" level="info" />
     <logger name="org.springframework" level="info" />
 
-    <logger name="org.apache.http.wire" level="debug" />
+    <!-- Switch to debug to see more HTTP-Information -->
+    <logger name="org.apache.http.wire" level="info" />
 
     <root level="info">
         <appender-ref ref="STDOUT" />
