@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="Definitions_0k3iwjl" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="4.0.0">
+  <decision id="orderDiscount" name="Order Discount">
+    <decisionTable id="DecisionTable_0bjd7qy">
+      <input id="Input_1" label="Order Amount">
+        <inputExpression id="InputExpression_1" typeRef="double">
+          <text>amountToPay</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="Discount percentage" name="discount" typeRef="integer" />
+      <rule id="DecisionRule_0p78che">
+        <inputEntry id="UnaryTests_1jbgsav">
+          <text>&lt;=39.99</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0phca8e">
+          <text>0</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1ysl6kb">
+        <inputEntry id="UnaryTests_0sjfc2r">
+          <text>[40.0..59.99]</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1nqjm5u">
+          <text>2</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_09ri92o">
+        <inputEntry id="UnaryTests_06jdhv3">
+          <text>[60.0..99.99]</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0ktvfbw">
+          <text>5</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0ro7i0v">
+        <inputEntry id="UnaryTests_0rywhpb">
+          <text>&gt; 100.0</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_11umxla">
+          <text>10</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>
